@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>تحقق من فهمك: متباينات القيمة المطلقة</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&family=Reem+Kufi:wght@500;700&family=Amiri:wght@700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --green:#3f9b4f; --green-d:#2c7a3a; --green-l:#e8f5ea;
+    --blue:#2a7fc1; --blue-l:#e7f1fa;
+    --red:#c0392b; --red-l:#fdecea;
+    --ink:#1f2a33; --muted:#5d6b76; --paper:#fffdf6; --line:#dde3e8;
+    --gold:#c79a2b;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:'Tajawal',sans-serif;color:var(--ink);
+    background:linear-gradient(160deg,#eaf6ec 0%,#f6fbff 55%,#fff8e6 100%);min-height:100vh}
+  .wrap{max-width:760px;margin:0 auto;padding:24px 16px 48px}
+  .card{background:#fff;border-radius:22px;box-shadow:0 10px 30px rgba(30,60,40,.10);padding:28px;position:relative;overflow:hidden}
+  .card::before{content:"";position:absolute;inset:0 0 auto 0;height:8px;background:linear-gradient(90deg,var(--green),#8ccf7e,var(--blue))}
+  h1{font-family:'Reem Kufi',sans-serif;color:var(--blue);font-size:30px;margin:6px 0 6px}
+  .lesson{display:inline-block;background:var(--green);color:#fff;border-radius:999px;padding:4px 14px;font-weight:700;font-size:14px}
+  p.lead{color:var(--muted);font-size:17px;line-height:1.8}
+  .ideas{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:18px 0}
+  .idea{background:var(--green-l);border-radius:14px;padding:12px;font-size:15px;line-height:1.6}
+  .idea b{color:var(--green-d)}
+  label{font-weight:700;display:block;margin:14px 0 8px}
+  input[type=text]{width:100%;font:inherit;font-size:18px;padding:12px 14px;border:2px solid var(--line);border-radius:12px;outline:none}
+  input[type=text]:focus{border-color:var(--blue)}
+  .btn{font:inherit;font-weight:800;font-size:18px;border:0;border-radius:14px;padding:13px 26px;cursor:pointer;transition:transform .1s, box-shadow .2s}
+  .btn:active{transform:scale(.97)}
+  .btn-main{background:var(--green);color:#fff;box-shadow:0 5px 0 var(--green-d)}
+  .btn-main:disabled{background:#b9c6bd;box-shadow:none;cursor:not-allowed}
+  .btn-ghost{background:var(--blue-l);color:var(--blue)}
+  .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:20px}
+  .err{color:var(--red);font-size:14px;min-height:20px;margin-top:6px}
+
+  /* progress */
+  .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-weight:700;color:var(--muted)}
+  .bar{height:12px;background:#edf1f4;border-radius:99px;overflow:hidden;margin-bottom:22px}
+  .bar i{display:block;height:100%;background:linear-gradient(90deg,var(--blue),var(--green));border-radius:99px;transition:width .5s}
+  .dots{display:flex;gap:6px}
+  .dots span{width:14px;height:14px;border-radius:50%;background:#e1e6ea}
+  .dots span.ok{background:var(--green)} .dots span.no{background:var(--red)} .dots span.cur{outline:3px solid var(--blue);outline-offset:1px}
+  .tag{display:inline-block;background:var(--blue-l);color:var(--blue);font-weight:700;border-radius:8px;padding:3px 10px;font-size:14px;margin-bottom:10px}
+  .q{font-size:20px;line-height:1.9;font-weight:500}
+  .math{font-size:26px;font-weight:800;color:var(--ink);background:#f7f9fb;border:2px dashed var(--line);border-radius:14px;padding:12px;text-align:center;margin:12px 0 18px;letter-spacing:.5px}
+  .opts{display:grid;gap:10px}
+  .opt{font:inherit;font-size:20px;font-weight:700;text-align:right;background:#fff;border:2px solid var(--line);border-radius:14px;padding:14px 16px;cursor:pointer;display:flex;align-items:center;gap:12px;transition:border-color .15s, background .15s}
+  .opt:hover:not(:disabled){border-color:var(--blue);background:var(--blue-l)}
+  .opt .k{flex:none;width:34px;height:34px;border-radius:10px;background:#eef2f5;display:grid;place-items:center;font-size:16px;color:var(--muted)}
+  .opt.right{border-color:var(--green);background:var(--green-l)} .opt.right .k{background:var(--green);color:#fff}
+  .opt.wrong{border-color:var(--red);background:var(--red-l)} .opt.wrong .k{background:var(--red);color:#fff}
+  .opt:disabled{cursor:default}
+  .hint{display:none;background:#fff8e1;border-right:5px solid var(--gold);border-radius:10px;padding:10px 14px;margin-top:12px;line-height:1.8}
+  .fb{display:none;margin-top:18px;border-radius:16px;padding:16px 18px;line-height:1.9;animation:pop .35s ease}
+  .fb.good{background:var(--green-l);border:2px solid #bfe3c5}
+  .fb.bad{background:var(--red-l);border:2px solid #f3c5bf}
+  .fb h3{margin:0 0 6px;font-size:20px}
+  .fb.good h3{color:var(--green-d)} .fb.bad h3{color:var(--red)}
+  .steps{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0}
+  .steps div{background:#fff;border-radius:12px;padding:10px 12px;font-size:16px}
+  .steps b{color:var(--blue)}
+  .nl{background:#fff;border-radius:12px;padding:6px;margin-top:8px}
+  @keyframes pop{from{transform:scale(.96);opacity:0}to{transform:scale(1);opacity:1}}
+  @media (max-width:560px){.steps{grid-template-columns:1fr}.math{font-size:22px}h1{font-size:25px}}
+
+  /* certificate */
+  .cert{background:var(--paper);border-radius:18px;padding:14px;box-shadow:0 14px 40px rgba(80,60,10,.18)}
+  .cert-in{border:3px double var(--gold);border-radius:12px;padding:30px 22px;text-align:center;position:relative;
+    background:radial-gradient(circle at 50% 0%,#fff 0%,var(--paper) 70%)}
+  .cert-in::before,.cert-in::after{content:"✦";position:absolute;color:var(--gold);font-size:22px;top:10px}
+  .cert-in::before{right:14px}.cert-in::after{left:14px}
+  .cert .small{color:var(--muted);font-size:15px}
+  .cert h2{font-family:'Amiri',serif;font-size:40px;color:var(--green-d);margin:6px 0}
+  .cert .name{font-family:'Reem Kufi',sans-serif;font-size:34px;color:var(--blue);border-bottom:2px solid var(--gold);display:inline-block;padding:0 26px 4px;margin:8px 0 12px}
+  .cert .txt{font-size:18px;line-height:2}
+  .stars{font-size:34px;letter-spacing:6px;margin:6px 0}
+  .stars .off{filter:grayscale(1);opacity:.3}
+  .score{display:inline-block;background:var(--green);color:#fff;font-weight:800;border-radius:99px;padding:6px 20px;font-size:20px;margin:6px 0}
+  .sign{display:flex;justify-content:space-between;margin-top:26px;font-size:15px;color:var(--muted);gap:12px}
+  .sign div{flex:1;border-top:1px solid #cbb98a;padding-top:6px}
+  .seal{width:84px;height:84px;border-radius:50%;margin:10px auto 0;background:radial-gradient(circle,#f2d27a,#c79a2b);display:grid;place-items:center;color:#fff;font-weight:800;font-size:13px;box-shadow:0 0 0 5px #f6e7b8;line-height:1.3}
+  .review{margin-top:18px;background:#fff;border-radius:16px;padding:16px;box-shadow:0 6px 18px rgba(0,0,0,.06)}
+  .review li{margin:6px 0;line-height:1.8}
+  .note{font-size:14px;color:var(--muted);text-align:center;margin-top:10px}
+  .confetti{position:fixed;top:-12px;width:10px;height:14px;border-radius:2px;z-index:9;pointer-events:none;animation:fall linear forwards}
+  @keyframes fall{to{transform:translateY(105vh) rotate(720deg);opacity:.8}}
+  .hidden{display:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- START -->
+  <section id="start" class="card">
+    <span class="lesson">الدرس ٤-٥</span>
+    <h1>حل المتباينات التي تتضمن القيمة المطلقة</h1>
+    <p class="lead">تحدٍّ قصير من أسئلة «تحقق من فهمك»: أربعة أسئلة، سؤال من كل فكرة. أجب عن كل سؤال، ثم انتقل إلى الذي بعده، وفي النهاية تحصل على شهادتك.</p>
+    <div class="ideas">
+      <div class="idea"><b>الفكرة ١</b><br>متباينات القيمة المطلقة ( &lt; )</div>
+      <div class="idea"><b>الفكرة ٢</b><br>حالة خاصة: القيمة المطلقة أصغر من عدد سالب</div>
+      <div class="idea"><b>الفكرة ٣</b><br>من واقع الحياة</div>
+      <div class="idea"><b>الفكرة ٤</b><br>متباينات القيمة المطلقة ( &gt; )</div>
+    </div>
+    <label for="nm">اكتب اسمك كما تريده أن يظهر في الشهادة:</label>
+    <input id="nm" type="text" placeholder="مثال: عبدالله محمد" maxlength="40" autocomplete="off">
+    <div class="err" id="nmErr"></div>
+    <div class="row"><button class="btn btn-main" id="go">ابدأ التحدي ←</button></div>
+  </section>
+
+  <!-- QUIZ -->
+  <section id="quiz" class="card hidden">
+    <div class="top"><span id="qNum"></span><div class="dots" id="dots"></div></div>
+    <div class="bar"><i id="barFill"></i></div>
+    <span class="tag" id="qTag"></span>
+    <div class="q" id="qText"></div>
+    <div class="math" id="qMath"></div>
+    <div class="opts" id="opts"></div>
+    <div class="hint" id="hint"></div>
+    <div class="fb" id="fb"></div>
+    <div class="row">
+      <button class="btn btn-ghost" id="hintBtn">💡 تلميح</button>
+      <button class="btn btn-main hidden" id="next">السؤال التالي ←</button>
+    </div>
+  </section>
+
+  <!-- CERTIFICATE -->
+  <section id="done" class="hidden">
+    <div class="cert" id="cert">
+      <div class="cert-in">
+        <div class="small">الرياضيات · الفصل ٤: المتباينات الخطية</div>
+        <h2 id="certTitle">شهادة تميّز</h2>
+        <div class="txt">يُشهد بأن الطالب / الطالبة</div>
+        <div class="name" id="certName"></div>
+        <div class="txt" id="certMsg"></div>
+        <div class="stars" id="stars"></div>
+        <div class="score" id="certScore"></div>
+        <div class="seal">أحسنت<br>✔</div>
+        <div class="sign">
+          <div>التاريخ: <span id="certDate"></span></div>
+          <div>توقيع المعلم/ـة</div>
+        </div>
+      </div>
+    </div>
+    <p class="note">لحفظ الشهادة: التقط صورة للشاشة 📸</p>
+    <div class="review">
+      <b>مراجعة إجاباتك:</b>
+      <ol id="reviewList"></ol>
+      <div class="row"><button class="btn btn-main" id="again">↻ أعد المحاولة</button></div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+const AR = n => String(n).replace(/\d/g, d => '٠١٢٣٤٥٦٧٨٩'[d]);
+
+/* number line: spec = {type:'between'|'outside'|'empty'|'all', a, b, closed:bool, min, max} */
+function numberLine(s){
+  const W=640,H=78,pad=30,y=34;
+  const min=s.min,max=s.max,X=v=>pad+(v-min)*(W-2*pad)/(max-min);
+  const blue='#2a7fc1';
+  let g=`<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="تمثيل الحل على خط الأعداد" style="direction:ltr">`;
+  g+=`<line x1="8" y1="${y}" x2="${W-8}" y2="${y}" stroke="#333" stroke-width="2"/>`;
+  g+=`<path d="M8 ${y} l10 -6 v12z M${W-8} ${y} l-10 -6 v12z" fill="#333"/>`;
+  for(let v=min; v<=max; v++){
+    g+=`<line x1="${X(v)}" y1="${y-6}" x2="${X(v)}" y2="${y+6}" stroke="#333"/>`;
+    const lbl = v<0 ? AR(-v)+'-' : AR(v);
+    g+=`<text x="${X(v)}" y="${y+26}" font-size="14" text-anchor="middle" fill="#333" font-family="Tajawal">${lbl}</text>`;
+  }
+  const seg=(x1,x2)=>`<line x1="${x1}" y1="${y}" x2="${x2}" y2="${y}" stroke="${blue}" stroke-width="7" stroke-linecap="round" opacity=".85"/>`;
+  const dot=v=>`<circle cx="${X(v)}" cy="${y}" r="7" fill="${s.closed?blue:'#fff'}" stroke="${blue}" stroke-width="3"/>`;
+  if(s.type==='between'){ g+=seg(X(s.a),X(s.b))+dot(s.a)+dot(s.b); }
+  if(s.type==='outside'){ g+=seg(14,X(s.a))+seg(X(s.b),W-14)+dot(s.a)+dot(s.b); }
+  if(s.type==='all'){ g+=seg(14,W-14); }
+  if(s.type==='empty'){ g+=`<text x="${W/2}" y="${y-12}" font-size="15" text-anchor="middle" fill="#c0392b" font-family="Tajawal" font-weight="700">لا يوجد ما يُظلَّل (Ø)</text>`; }
+  return g+'</svg>';
+}
+
+const Q = [
+  {
+    tag:'الفكرة ١ · متباينات القيمة المطلقة ( < )',
+    text:'حل المتباينة الآتية، ثم اختر مجموعة حلها:',
+    math:'|ن - ٨| ≤ ٢',
+    opts:['{ن | ٦ ≤ ن ≤ ١٠}','{ن | ن ≤ ١٠}','{ن | ن ≤ ٦ أو ن ≥ ١٠}','{ن | -١٠ ≤ ن ≤ -٦}'],
+    ans:0,
+    hint:'«أصغر من» تعني أن المسافة بين ن - ٨ والصفر صغيرة، فالحل يكون <b>بين</b> قيمتين، ونربط الحالتين بـ «و».',
+    steps:['ن - ٨ ≤ ٢<br>ن ≤ ١٠','-(ن - ٨) ≤ ٢<br>ن - ٨ ≥ -٢<br>ن ≥ ٦'],
+    why:'نأخذ تقاطع الحالتين (و)، فيكون الحل: ٦ ≤ ن ≤ ١٠.',
+    line:{type:'between',a:6,b:10,closed:true,min:3,max:13}
+  },
+  {
+    tag:'الفكرة ٢ · حالة خاصة',
+    text:'ما مجموعة حل المتباينة الآتية؟',
+    math:'|٢جـ - ٥| < -٣',
+    opts:['{جـ | ١ < جـ < ٤}','مجموعة الأعداد الحقيقية','Ø  (المجموعة الخالية)','{جـ | جـ < ١ أو جـ > ٤}'],
+    ans:2,
+    hint:'انظر إلى الطرف الأيمن جيدًا… هل يمكن أن تكون القيمة المطلقة أصغر من عدد <b>سالب</b>؟',
+    steps:null,
+    why:'القيمة المطلقة لأي عدد ≥ صفر دائمًا، فلا يمكن أن تكون أصغر من -٣. إذن لا يوجد حل، ومجموعة الحل هي المجموعة الخالية Ø.',
+    line:{type:'empty',min:-2,max:6}
+  },
+  {
+    tag:'الفكرة ٣ · من واقع الحياة 🧪',
+    text:'<b>كيمياء:</b> درجة انصهار الجليد هي ٠° سيليزية، لكن خالدًا لاحظ في أثناء إجراء تجربة أن درجة انصهار الجليد تتغير ضمن ١° سيليزية. ما مدى درجات الحرارة التي لاحظها خالد؟',
+    math:'|س - ٠| ≤ ١',
+    opts:['{س | ٠ ≤ س ≤ ١}','{س | -١ ≤ س ≤ ١}','{س | س ≤ -١ أو س ≥ ١}','{س | -٢ ≤ س ≤ ٢}'],
+    ans:1,
+    hint:'«ضمن ١°» تعني أن الفرق بين الدرجة الفعلية س و ٠ أقل من أو يساوي ١، في الاتجاهين: أعلى من الصفر وأقل منه.',
+    steps:['س - ٠ ≤ ١<br>س ≤ ١','-(س - ٠) ≤ ١<br>س ≥ -١'],
+    why:'إذن درجات الحرارة التي لاحظها خالد بين -١° و ١° سيليزية: {س | -١ ≤ س ≤ ١}.',
+    line:{type:'between',a:-1,b:1,closed:true,min:-4,max:4}
+  },
+  {
+    tag:'الفكرة ٤ · متباينات القيمة المطلقة ( > )',
+    text:'حل المتباينة الآتية، ثم اختر مجموعة حلها:',
+    math:'|٢ك + ١| ≥ ٧',
+    opts:['{ك | -٤ ≤ ك ≤ ٣}','{ك | ك ≥ ٣}','{ك | ك ≤ -٣ أو ك ≥ ٤}','{ك | ك ≤ -٤ أو ك ≥ ٣}'],
+    ans:3,
+    hint:'«أكبر من» تعني أن المسافة كبيرة، فالحل يكون في <b>جهتين متباعدتين</b>، ونربط الحالتين بـ «أو».',
+    steps:['٢ك + ١ ≥ ٧<br>٢ك ≥ ٦<br>ك ≥ ٣','-(٢ك + ١) ≥ ٧<br>٢ك + ١ ≤ -٧<br>٢ك ≤ -٨<br>ك ≤ -٤'],
+    why:'نأخذ اتحاد الحالتين (أو)، فيكون الحل: ك ≤ -٤ أو ك ≥ ٣.',
+    line:{type:'outside',a:-4,b:3,closed:true,min:-7,max:6}
+  }
+];
+
+let i=0, score=0, results=[], name='';
+const $=id=>document.getElementById(id);
+
+$('go').onclick=()=>{
+  name=$('nm').value.trim();
+  if(!name){ $('nmErr').textContent='من فضلك اكتب اسمك أولًا 🙂'; $('nm').focus(); return; }
+  $('start').classList.add('hidden'); $('quiz').classList.remove('hidden');
+  i=0;score=0;results=[]; render();
+};
+$('nm').addEventListener('keydown',e=>{ if(e.key==='Enter') $('go').click(); });
+
+function render(){
+  const q=Q[i];
+  $('qNum').textContent=`السؤال ${AR(i+1)} من ${AR(Q.length)}`;
+  $('barFill').style.width=(i/Q.length*100)+'%';
+  $('dots').innerHTML=Q.map((_,k)=>`<span class="${results[k]===true?'ok':results[k]===false?'no':''} ${k===i?'cur':''}"></span>`).join('');
+  $('qTag').textContent=q.tag;
+  $('qText').innerHTML=q.text;
+  $('qMath').textContent=q.math;
+  const keys=['أ','ب','جـ','د'];
+  $('opts').innerHTML=q.opts.map((o,k)=>`<button class="opt" data-k="${k}"><span class="k">${keys[k]}</span><span>${o}</span></button>`).join('');
+  document.querySelectorAll('.opt').forEach(b=>b.onclick=()=>choose(+b.dataset.k));
+  $('hint').style.display='none'; $('hint').innerHTML='💡 '+q.hint;
+  $('hintBtn').classList.remove('hidden');
+  $('fb').style.display='none';
+  $('next').classList.add('hidden');
+  $('next').textContent = i===Q.length-1 ? 'احصل على شهادتك 🏆' : 'السؤال التالي ←';
+}
+
+$('hintBtn').onclick=()=>{ $('hint').style.display='block'; };
+
+function choose(k){
+  const q=Q[i], ok=k===q.ans;
+  results[i]=ok; if(ok) score++;
+  document.querySelectorAll('.opt').forEach(b=>{
+    b.disabled=true;
+    const kk=+b.dataset.k;
+    if(kk===q.ans) b.classList.add('right');
+    else if(kk===k) b.classList.add('wrong');
+  });
+  const steps=q.steps?`<div class="steps"><div><b>الحالة ١:</b> العبارة غير سالبة<br>${q.steps[0]}</div><div><b>الحالة ٢:</b> العبارة سالبة<br>${q.steps[1]}</div></div>`:'';
+  const fb=$('fb');
+  fb.className='fb '+(ok?'good':'bad');
+  fb.innerHTML=`<h3>${ok?'إجابة صحيحة! أحسنت 🎉':'إجابة غير صحيحة، لا بأس! تعلّم من الحل 👇'}</h3>${steps}<div>${q.why}</div><div class="nl">${numberLine(q.line)}</div>`;
+  fb.style.display='block';
+  $('hintBtn').classList.add('hidden'); $('hint').style.display='none';
+  $('next').classList.remove('hidden');
+  $('dots').children[i].classList.add(ok?'ok':'no');
+  $('barFill').style.width=((i+1)/Q.length*100)+'%';
+  fb.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+$('next').onclick=()=>{
+  if(i<Q.length-1){ i++; render(); window.scrollTo({top:0,behavior:'smooth'}); }
+  else finish();
+};
+
+function finish(){
+  $('quiz').classList.add('hidden'); $('done').classList.remove('hidden');
+  $('certName').textContent=name;
+  const full=score===Q.length;
+  $('certTitle').textContent= full?'شهادة تميّز':(score>=Q.length/2?'شهادة إنجاز':'شهادة مشاركة');
+  $('certMsg').innerHTML= full
+    ? 'قد أتمّ بنجاح تحدّي «تحقق من فهمك» في درس<br><b>حل المتباينات التي تتضمن القيمة المطلقة</b><br>وأجاب عن جميع الأسئلة إجابةً صحيحة. نفخر بك!'
+    : 'قد أتمّ تحدّي «تحقق من فهمك» في درس<br><b>حل المتباينات التي تتضمن القيمة المطلقة</b><br>'+(score>=Q.length/2?'بأداء جيد، واصل التقدّم!':'وشارك بجدّ، راجع الأمثلة وحاول مرة أخرى لتحصل على التميّز!');
+  $('stars').innerHTML=Q.map((_,k)=>`<span class="${k<score?'':'off'}">⭐</span>`).join('');
+  $('certScore').textContent=`الدرجة: ${AR(score)} / ${AR(Q.length)}`;
+  let d; try{ d=new Date().toLocaleDateString('ar-SA',{day:'numeric',month:'long',year:'numeric'}); }catch(e){ d=AR(new Date().toLocaleDateString()); }
+  $('certDate').textContent=d;
+  $('reviewList').innerHTML=Q.map((q,k)=>`<li>${results[k]?'✅':'❌'} <span>${q.math}</span> ← الإجابة: <b>${q.opts[q.ans]}</b></li>`).join('');
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(score>=Q.length/2) confetti();
+}
+
+function confetti(){
+  const cs=['#3f9b4f','#2a7fc1','#c79a2b','#e67e22','#c0392b'];
+  for(let k=0;k<80;k++){
+    const c=document.createElement('div'); c.className='confetti';
+    c.style.left=Math.random()*100+'vw'; c.style.background=cs[k%cs.length];
+    c.style.animationDuration=(2.2+Math.random()*2)+'s'; c.style.animationDelay=(Math.random()*.8)+'s';
+    document.body.appendChild(c); setTimeout(()=>c.remove(),5200);
+  }
+}
+
+$('again').onclick=()=>{
+  $('done').classList.add('hidden'); $('quiz').classList.remove('hidden');
+  i=0;score=0;results=[]; render(); window.scrollTo({top:0});
+};
+</script>
+</body>
+</html>
